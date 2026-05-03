@@ -128,6 +128,7 @@ When writing or modifying a file in any directory, read the **oldest existing fi
 4. **Propose, then execute.** Say what file you are about to create/modify, wait for confirmation.
 5. **Test after writing.** Run `go test ./...` and report results.
 6. **Update docs** if you change behavior described in PRD, README, or this file.
+7. **Before every push:** update `docs/codingplan.ini` — set completed phases to `done`, set the active phase to `in-progress`, update `current_phase` and `last_updated`.
 
 ## Multi-Agent Workflow (Runtime, Not Development)
 

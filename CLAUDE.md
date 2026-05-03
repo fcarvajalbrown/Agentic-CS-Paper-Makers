@@ -80,6 +80,8 @@ The CLI is strictly sequential where order matters, parallel only for the 3 Crit
 
 See `docs/codingplan.ini` for the phased build order. Never start a phase until all phases above it are done.
 
+**Before every push:** update `docs/codingplan.ini` — set completed phases to `done`, set the active phase to `in-progress`, update `current_phase` and `last_updated`.
+
 ## Configuration Hierarchy
 
 Highest to lowest:
