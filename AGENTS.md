@@ -21,8 +21,8 @@ Agentic CS Paper Makers is a CLI-first academic paper generation workflow target
 ## Architecture Principles
 
 1. **Go-only:** No Python, no external runtime. The binary ships alone.
-2. **LLM calls are plain HTTP:** `internal/llm/kimi_client.go` calls the Kimi/Moonshot REST API directly.
-3. **Tool-use loop in Go:** LLM returns a function call → Go executes the HTTP tool → result fed back into conversation. Lives in `internal/llm/kimi_client.go`.
+2. **LLM calls are plain HTTP:** `internal/llm/client.go` calls the Kimi/Moonshot REST API directly.
+3. **Tool-use loop in Go:** LLM returns a function call → Go executes the HTTP tool → result fed back into conversation. Lives in `internal/llm/client.go`.
 4. **Immutable artifacts:** Every stage produces a versioned JSON file in `.paperflow/artifacts/`. Never mutate in place.
 5. **Checkpoint survival:** `Ctrl+C` at any point must gracefully save state. `paperflow resume` must always work.
 6. **Schema-first:** No artifact moves to the next stage without passing JSON Schema validation.
