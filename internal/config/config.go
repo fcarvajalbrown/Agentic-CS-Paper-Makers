@@ -8,6 +8,7 @@ type Config struct {
 	Budget    float64
 	MaxTokens int
 	Agents    map[string]string
+	Seed      string
 }
 
 func Load(projectDir string, flags Flags) (*Config, error) {
@@ -22,7 +23,7 @@ func Load(projectDir string, flags Flags) (*Config, error) {
 	}
 
 	cfg := &Config{
-		APIKey:    DefaultModel,
+		APIKey:    "",
 		Model:     DefaultModel,
 		Budget:    DefaultBudget,
 		MaxTokens: DefaultMaxTokens,
@@ -71,6 +72,9 @@ func applyFile(cfg *Config, f *FileConfig) {
 	}
 	for k, v := range f.Agents {
 		cfg.Agents[k] = v
+	}
+	if f.Seed != "" {
+		cfg.Seed = f.Seed
 	}
 }
 

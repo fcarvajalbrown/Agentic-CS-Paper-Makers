@@ -13,6 +13,7 @@ type FileConfig struct {
 	Budget    float64           `json:"budget,omitempty"`
 	MaxTokens int               `json:"max_tokens,omitempty"`
 	Agents    map[string]string `json:"agents,omitempty"`
+	Seed      string            `json:"seed,omitempty"`
 }
 
 func LoadProjectConfig(projectDir string) (*FileConfig, error) {

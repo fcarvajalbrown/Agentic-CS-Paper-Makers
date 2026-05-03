@@ -22,12 +22,13 @@
 # Build
 go build -o paperflow ./cmd/paperflow
 
-# Create a new paper project
+# Create a new paper project (prompts for seed idea)
 paperflow init my_stackelberg_paper
 cd my_stackelberg_paper
 
 # Run the full workflow step by step
-paperflow research "Byzantine Fault Tolerance using Stackelberg competition"
+paperflow research                          # uses seed from init
+paperflow research --seed "BFT via Stackelberg"  # or override inline
 paperflow architect
 paperflow write
 paperflow review
@@ -83,4 +84,4 @@ GPL v3 — see `LICENSE`.
 
 ## Status
 
-In development. See [`docs/PRD.md`](docs/PRD.md) for the full specification and [`docs/codingplan.ini`](docs/codingplan.ini) for the build order.
+All 10 build phases are complete or in progress. The binary compiles and the full CLI is wired up. Remaining: `go.sum` finalization and integration testing. See [`docs/PRD.md`](docs/PRD.md) for the full specification and [`docs/codingplan.ini`](docs/codingplan.ini) for the build order.
