@@ -21,7 +21,7 @@ This is a Go-only CLI tool for orchestrating multi-agent academic paper writing 
 - `Ctrl+C` must always trigger graceful abort: save checkpoint, print resume command.
 - Cross-compilation target: Windows, macOS, Linux, ARM.
 - LLM calls go directly from `internal/llm/client.go` to the Kimi/Moonshot REST API.
-- Web search tools live in `internal/tools/` — arXiv and Semantic Scholar HTTP clients. No scraping.
+- Web search tools live in `internal/tools/` — arXiv, Semantic Scholar, and Zenodo HTTP clients. No scraping.
 - The tool-use loop (LLM returns function call → Go executes → result fed back) lives in `internal/llm/client.go`.
 
 ### Agent Profiles (`agents/`)

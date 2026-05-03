@@ -140,5 +140,5 @@ This project implements a multi-agent workflow, but **development is single-agen
 - **Single paper per workflow.** No multi-project workspaces in MVP.
 - **No LaTeX dependency.** Markdown is the canonical output.
 - **No Simulation Agent.** Papers are purely theoretical. No generated code execution.
-- **No web scraping.** arXiv API and Semantic Scholar API only.
+- **No web scraping.** arXiv API, Semantic Scholar API, and Zenodo API only.
 - **No GUI in MVP.** CLI only. GUI is a future layer.
