@@ -1,6 +1,6 @@
 # Go binaries
-paperflow
-paperflow.exe
+/paperflow
+/paperflow.exe
 
 # Go test and coverage artifacts
 *.test
