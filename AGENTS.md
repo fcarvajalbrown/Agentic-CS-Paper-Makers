@@ -2,18 +2,16 @@
 
 ## Project Purpose
 
-Agentic CS Paper Makers is a CLI-first academic paper generation workflow targeting computer science and game theory research. It orchestrates multiple specialized LLM agents through a Go-based CLI with an embedded Python LLM bridge. The output targets preprint servers (Zenodo) and professional networks (LinkedIn), with academic rigor as a quality aspiration rather than a journal-submission guarantee.
+Agentic CS Paper Makers is a CLI-first academic paper generation workflow targeting computer science and game theory research. It orchestrates multiple specialized LLM agents through a Go-only CLI. The output targets preprint servers (Zenodo) and professional networks (LinkedIn), with academic rigor as a quality aspiration rather than a journal-submission guarantee.
 
 ## Technology Stack
 
 ### Core
-- **Go 1.22+** — CLI, state machine, checkpointing, schema validation, cross-OS binary distribution
-- **Python 3.10+** — LLM API bridge, web search, tool execution (embedded via `//go:embed`)
+- **Go 1.22+** — CLI, state machine, checkpointing, schema validation, LLM API calls, web search, tool execution, cross-OS binary distribution
 - **JSON** — All inter-agent artifacts use versioned JSON with strict schema validation
 
 ### Key Dependencies (Planned)
 - Go: `cobra` (CLI), standard library for HTTP, JSON, filesystem
-- Python: `requests` or `httpx` (HTTP), minimal external deps
 
 ### Output
 - Canonical: **Markdown** (`paper.md`) with YAML frontmatter, LaTeX math blocks
@@ -22,11 +20,12 @@ Agentic CS Paper Makers is a CLI-first academic paper generation workflow target
 
 ## Architecture Principles
 
-1. **Language separation:** Go handles everything except LLM interaction. Python handles LLM calls, search, and tool use.
-2. **Go-Python IPC:** Strict JSON over stdin/stdout. No shared memory, no sockets, no file-based IPC.
-3. **Immutable artifacts:** Every stage produces a versioned JSON file in `.paperflow/artifacts/`. Never mutate in place.
-4. **Checkpoint survival:** `Ctrl+C` at any point must gracefully save state. `paperflow resume` must always work.
-5. **Schema-first:** No artifact moves to the next stage without passing JSON Schema validation.
+1. **Go-only:** No Python, no external runtime. The binary ships alone.
+2. **LLM calls are plain HTTP:** `internal/llm/kimi_client.go` calls the Kimi/Moonshot REST API directly.
+3. **Tool-use loop in Go:** LLM returns a function call → Go executes the HTTP tool → result fed back into conversation. Lives in `internal/llm/kimi_client.go`.
+4. **Immutable artifacts:** Every stage produces a versioned JSON file in `.paperflow/artifacts/`. Never mutate in place.
+5. **Checkpoint survival:** `Ctrl+C` at any point must gracefully save state. `paperflow resume` must always work.
+6. **Schema-first:** No artifact moves to the next stage without passing JSON Schema validation.
 
 ## Directory Conventions
 
@@ -34,30 +33,39 @@ Agentic CS Paper Makers is a CLI-first academic paper generation workflow target
 .
 ├── cmd/paperflow/          # Go entry point
 ├── internal/               # Go private packages
-│   ├── cli/                # Commands, flags, help
+│   ├── cli/                # One file per command + flags.go + help.go
 │   ├── config/             # Config hierarchy
 │   ├── state/              # Checkpoint, resume, rollback
 │   ├── agents/             # Orchestrator, runner, registry
 │   ├── artifacts/          # Schema definitions, validator, store
-│   ├── llm/                # Python bridge interface, cache, cost tracking
+│   ├── llm/                # Kimi/Moonshot client, tool-use loop, cache, cost tracking
+│   ├── tools/              # arXiv and Semantic Scholar HTTP clients
+│   ├── inbox/              # Interactive reviewer response loop logic
 │   └── export/             # Finalize and export logic
-├── pkg/embed/              # go:embed directives
-├── python/                 # Python bridge (embedded into binary)
-│   ├── bridge.py           # Main router
-│   ├── agents/             # Agent implementations
-│   ├── tools/              # Web search tools
-│   ├── models/             # LLM API client
-│   └── utils/              # IPC handler
-├── agents/                 # Agent profile .md files (embedded)
-├── schemas/                # JSON Schema files (embedded)
+├── pkg/embed/              # go:embed directives for agent profiles + schemas
+├── agents/                 # Agent profile .md files (embedded into binary)
+├── schemas/                # JSON Schema files (embedded into binary)
 ├── go.mod, go.sum
 ├── Makefile
-├── PRD.md                  # Full product spec
+├── docs/PRD.md             # Full product spec
 ├── README.md               # User-facing docs
 └── CLAUDE.md               # Claude Code specific instructions
 ```
 
 ## Coding Conventions
+
+### Conventional Commits
+All commits must follow the [Conventional Commits](https://www.conventionalcommits.org/) spec:
+
+```
+<type>(scope): <description>
+
+Types: feat, fix, refactor, test, docs, chore, ci
+Examples:
+  feat(llm): add kimi client with exponential backoff
+  fix(inbox): handle empty review round on resume
+  chore(deps): add cobra dependency
+```
 
 ### Go
 - Use `cobra` for subcommands. One command per file under `internal/cli/`.
@@ -66,16 +74,24 @@ Agentic CS Paper Makers is a CLI-first academic paper generation workflow target
 - Configuration loading: `flags > env > local JSON > global JSON > defaults`.
 - State writes are atomic: write to temp file, then rename.
 
-### Python
-- Modules are standalone. Each agent can be imported and tested independently.
-- The bridge receives JSON on stdin and prints JSON on stdout. Nothing else to stdout.
-- Use type hints on all public functions.
-- Minimal external dependencies. Prefer stdlib over third-party.
+### Style: Use the Oldest File in the Directory as a Guide
+When writing or modifying a file in any directory, read the **oldest existing file** in that directory first and use it as a style reference: package name, import grouping, error handling pattern, naming style, receiver names. Prefer consistency with what's already there, but use judgment — it's a suggestion, not a hard constraint.
 
 ### JSON Schemas
 - Schemas live in `schemas/` and are embedded in the Go binary.
 - Every artifact has a `version` field for forward compatibility.
 - Schemas validate structure, required fields, and basic types. Not business logic.
+
+## Testing Standards
+
+- `go test ./...` must pass before any commit.
+- Every schema change needs a corresponding test fixture (valid and invalid examples).
+- Cache and checkpoint tests must verify crash recovery.
+- **Never modify a test to make it pass.** If a test fails, fix the root cause in the production code first. Only update the test itself if the test is genuinely wrong (wrong expectation, stale contract). When in doubt, ask.
+
+## Communication Rules
+
+- **NEVER use emojis** — not in code, comments, docs, commit messages, CLI output, or agent responses.
 
 ## File Creation Policy
 
@@ -91,15 +107,8 @@ Agentic CS Paper Makers is a CLI-first academic paper generation workflow target
 1. **Read the PRD** before implementing any feature. The PRD is the source of truth.
 2. **Read existing code** before modifying. Use exploration agents if you need to scan >3 files.
 3. **Propose, then execute.** Say what file you're about to create/modify, wait for confirmation.
-4. **Test after writing.** Run `go test` or `pytest` as appropriate. Report results.
+4. **Test after writing.** Run `go test ./...` and report results.
 5. **Update docs** if you change behavior described in PRD, README, or this file.
-
-## Testing Standards
-
-- Go: `go test ./...` must pass before any commit.
-- Python: `pytest` in a dedicated venv.
-- Every schema change needs a corresponding test fixture (valid and invalid examples).
-- Cache and checkpoint tests must verify crash recovery.
 
 ## Multi-Agent Workflow (Runtime, Not Development)
 

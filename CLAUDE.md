@@ -2,43 +2,60 @@
 
 ## Project Overview
 
-This is a Go-based CLI tool with an embedded Python LLM bridge for orchestrating multi-agent academic paper writing workflows. The Go CLI manages state, checkpoints, schema validation, and cross-OS distribution. The Python bridge handles LLM API calls to Kimi/Moonshot, web search (arXiv, Semantic Scholar), and tool execution.
+This is a Go-only CLI tool for orchestrating multi-agent academic paper writing workflows. Go handles everything: CLI, state machine, checkpointing, schema validation, LLM API calls to Kimi/Moonshot, web search (arXiv, Semantic Scholar), tool execution, and cross-OS binary distribution.
 
 ## Language Stack
 
 | Layer | Language | Responsibility |
 |---|---|---|
-| CLI & Orchestrator | Go | Commands, state machine, checkpointing, schema validation, cross-OS binary distribution |
-| LLM Bridge | Python (embedded) | API calls to Kimi/Moonshot, web search, tool execution |
+| Everything | Go | Commands, state machine, checkpointing, schema validation, LLM API calls, web search, tool execution, cross-OS binary distribution |
 
-**Rule of thumb:** If it touches the filesystem, CLI parsing, or state persistence → **Go**. If it talks to an LLM or makes HTTP requests → **Python**.
+**Rule of thumb:** It's all Go. No Python, no external runtime dependency. The binary ships alone.
 
 ## Architecture Rules
 
 ### Go (`cmd/`, `internal/`, `pkg/`)
-- Use `cobra` for CLI commands (we will add this dependency).
+- Use `cobra` for CLI commands. One command per file under `internal/cli/`.
 - All JSON artifacts must be validated against embedded JSON Schema before the next stage runs.
 - Every agent stage writes a versioned artifact to `.paperflow/artifacts/` before proceeding.
 - `Ctrl+C` must always trigger graceful abort: save checkpoint, print resume command.
 - Cross-compilation target: Windows, macOS, Linux, ARM.
-
-### Python (`python/`)
-- The bridge communicates with Go via **stdin/stdout JSON** only.
-- Each agent is a standalone module called by `bridge.py`.
-- The Kimi/Moonshot client lives in `python/models/kimi_client.py` and handles retries, seed, and streaming.
-- Web search tools live in `python/tools/` — arXiv API and Semantic Scholar API only. No scraping.
+- LLM calls go directly from `internal/llm/kimi_client.go` to the Kimi/Moonshot REST API.
+- Web search tools live in `internal/tools/` — arXiv and Semantic Scholar HTTP clients. No scraping.
+- The tool-use loop (LLM returns function call → Go executes → result fed back) lives in `internal/llm/kimi_client.go`.
 
 ### Agent Profiles (`agents/`)
 - Each agent has a `.md` profile file defining its role and system prompt.
 - These are embedded into the Go binary via `//go:embed`.
 - **Never edit agent profiles without explicit user sign-off on each.** The user wants to define them one-by-one with their check.
 
+## Coding Conventions
+
+### Conventional Commits
+All commits must follow the [Conventional Commits](https://www.conventionalcommits.org/) spec:
+
+```
+<type>(scope): <description>
+
+Types: feat, fix, refactor, test, docs, chore, ci
+Examples:
+  feat(llm): add kimi client with exponential backoff
+  fix(inbox): handle empty review round on resume
+  chore(deps): add cobra dependency
+```
+
+### Style: Use the Oldest File in the Directory as a Guide
+When writing or modifying a file in any directory, read the **oldest existing file** in that directory first and use it as a style reference: package name, import grouping, error handling pattern, naming style, receiver names. Prefer consistency with what's already there, but use judgment — it's a suggestion, not a hard constraint.
+
+### Tests
+**Never modify a test to make it pass.** If a test fails, fix the root cause in the production code first. Only update the test itself if the test is genuinely wrong (wrong expectation, stale contract). When in doubt, ask.
+
 ## Workflow Stages
 
 The CLI is strictly sequential where order matters, parallel only for the 3 Critics:
 
 1. `paperflow init` → scaffold project
-2. `paperflow start` or `paperflow research` → Research Agent
+2. `paperflow research` → Research Agent
 3. `paperflow architect` → Socratic Architect (human gate)
 4. `paperflow write` → Lead Writer
 5. `paperflow review` → dispatch 3 Critics in parallel
@@ -64,9 +81,8 @@ Highest to lowest:
 
 ## Testing & Quality
 
-- Go code: standard `go test`.
-- Python code: `pytest` in a virtual environment.
-- Validate all JSON artifacts against schema before accepting them from the bridge.
+- Go code: `go test ./...` must pass before any commit.
+- Validate all JSON artifacts against schema before the next stage runs.
 - Every LLM call must be cached in `.paperflow/cache/` with hash-based lookup.
 
 ## Communication Rules
@@ -75,6 +91,7 @@ Highest to lowest:
 - The user prefers **one-thing-at-a-time** interaction. Present one recommendation, wait for feedback, then move to the next.
 - The user speaks English and Spanish only.
 - Do **not** use `.cn` sites for reference or configuration.
+- **NEVER use emojis** — not in code, comments, docs, commit messages, CLI output, or chat responses.
 
 ## File Creation Policy
 

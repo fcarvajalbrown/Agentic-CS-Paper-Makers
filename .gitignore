@@ -1,1 +1,26 @@
-/PRD.md
+# Go binaries
+paperflow
+paperflow.exe
+
+# Go test and coverage artifacts
+*.test
+coverage.out
+
+# Go workspace (local multi-module dev, not for commit)
+go.work
+go.work.sum
+
+# Runtime paper project directories (created by paperflow init)
+.paperflow/
+
+# Secrets
+.env
+.env.*
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Editor noise
+.idea/
+.vscode/
