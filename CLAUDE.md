@@ -29,6 +29,18 @@ This is a Go-only CLI tool for orchestrating multi-agent academic paper writing 
 - These are embedded into the Go binary via `//go:embed`.
 - **Never edit agent profiles without explicit user sign-off on each.** The user wants to define them one-by-one with their check.
 
+## AI Skills (`.skills/`)
+
+Model-agnostic system prompts for working on this codebase. Work with any LLM — Claude, Kimi, GPT, Codex.
+
+| Skill | When to use |
+|---|---|
+| `.skills/coder.md` | Writing code file by file |
+| `.skills/reviewer.md` | Reviewing changes before committing |
+| `.skills/architect.md` | Design decisions and tradeoff evaluation |
+
+See `.skills/README.md` for usage instructions per model.
+
 ## Coding Conventions
 
 ### Conventional Commits
@@ -61,6 +73,10 @@ The CLI is strictly sequential where order matters, parallel only for the 3 Crit
 5. `paperflow review` → dispatch 3 Critics in parallel
 6. `paperflow inbox` → human picks reviewers, loops until `stop`
 7. `paperflow finalize` → assemble paper.md + references.bib + metadata.json
+
+## Build Order
+
+See `codingplan.ini` for the phased build order. Never start a phase until all phases above it are done.
 
 ## Configuration Hierarchy
 
@@ -105,10 +121,3 @@ The correct flow is:
 5. Ask if ready for the next file
 
 This rule is non-negotiable. The user explicitly requested it.
-
-## When to Use Agents/Subagents
-
-- For read-only codebase exploration across >3 files → use `Agent` with `subagent_type="explore"`
-- For implementation planning before writing code → use `Agent` with `subagent_type="plan"`
-- For focused coding tasks → use `Agent` with `subagent_type="coder"`
-- For simple, single-file edits → do it directly, no agent needed

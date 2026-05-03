@@ -1,6 +1,6 @@
 # Agentic CS Paper Makers
 
-![Go](https://img.shields.io/badge/Go-1.22+-00ADD8?logo=go&logoColor=white)
+![Go](https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white)
 ![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows%20%7C%20arm-lightgrey)
 ![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![Status](https://img.shields.io/badge/status-in%20development-yellow)
@@ -44,7 +44,7 @@ paperflow export --pdf
 
 ## Requirements
 
-- **Go 1.22+**
+- **Go 1.26+**
 - **A Kimi / Moonshot API key** (`PAPERFLOW_API_KEY`)
 - **pandoc** + **wkhtmltopdf** — optional, for PDF export only
 
@@ -67,10 +67,20 @@ paperflow write --cheap
 paperflow write --production
 ```
 
+## AI Skills
+
+The `.skills/` directory contains model-agnostic system prompts for working on this codebase. They work with any LLM — Claude, Kimi, GPT, or Codex. See [`.skills/README.md`](.skills/README.md) for usage instructions.
+
+| Skill | Purpose |
+|---|---|
+| `coder.md` | Writing code file by file |
+| `reviewer.md` | Reviewing changes before committing |
+| `architect.md` | Design decisions and tradeoff evaluation |
+
 ## License
 
 GPL v3 — see `LICENSE`.
 
 ## Status
 
-In development. See [`docs/PRD.md`](docs/PRD.md) for the full specification.
+In development. See [`docs/PRD.md`](docs/PRD.md) for the full specification and [`codingplan.ini`](codingplan.ini) for the build order.

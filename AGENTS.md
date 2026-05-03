@@ -7,11 +7,11 @@ Agentic CS Paper Makers is a CLI-first academic paper generation workflow target
 ## Technology Stack
 
 ### Core
-- **Go 1.22+** — CLI, state machine, checkpointing, schema validation, LLM API calls, web search, tool execution, cross-OS binary distribution
+- **Go 1.26** — CLI, state machine, checkpointing, schema validation, LLM API calls, web search, tool execution, cross-OS binary distribution
 - **JSON** — All inter-agent artifacts use versioned JSON with strict schema validation
 
-### Key Dependencies (Planned)
-- Go: `cobra` (CLI), standard library for HTTP, JSON, filesystem
+### Dependencies
+- `github.com/spf13/cobra v1.9.0` — CLI commands
 
 ### Output
 - Canonical: **Markdown** (`paper.md`) with YAML frontmatter, LaTeX math blocks
@@ -45,12 +45,27 @@ Agentic CS Paper Makers is a CLI-first academic paper generation workflow target
 ├── pkg/embed/              # go:embed directives for agent profiles + schemas
 ├── agents/                 # Agent profile .md files (embedded into binary)
 ├── schemas/                # JSON Schema files (embedded into binary)
+├── .skills/                # Model-agnostic system prompts (coder, reviewer, architect)
+├── .vscode/                # VSCode workspace settings and extension recommendations
+├── docs/PRD.md             # Full product spec
+├── codingplan.ini          # Phased build order
 ├── go.mod, go.sum
 ├── Makefile
-├── docs/PRD.md             # Full product spec
 ├── README.md               # User-facing docs
 └── CLAUDE.md               # Claude Code specific instructions
 ```
+
+## AI Skills (`.skills/`)
+
+Model-agnostic system prompts for working on this codebase. Work with Claude, Kimi, GPT, Codex, or any LLM.
+
+| Skill | When to use |
+|---|---|
+| `coder.md` | Writing code file by file |
+| `reviewer.md` | Reviewing changes before committing |
+| `architect.md` | Design decisions and tradeoff evaluation |
+
+See `.skills/README.md` for usage instructions per model.
 
 ## Coding Conventions
 
@@ -105,10 +120,11 @@ When writing or modifying a file in any directory, read the **oldest existing fi
 ## Workflow When Working on This Project
 
 1. **Read the PRD** before implementing any feature. The PRD is the source of truth.
-2. **Read existing code** before modifying. Use exploration agents if you need to scan >3 files.
-3. **Propose, then execute.** Say what file you're about to create/modify, wait for confirmation.
-4. **Test after writing.** Run `go test ./...` and report results.
-5. **Update docs** if you change behavior described in PRD, README, or this file.
+2. **Check `codingplan.ini`** for the current phase and build order.
+3. **Read existing code** before modifying. Use exploration agents if you need to scan >3 files.
+4. **Propose, then execute.** Say what file you are about to create/modify, wait for confirmation.
+5. **Test after writing.** Run `go test ./...` and report results.
+6. **Update docs** if you change behavior described in PRD, README, or this file.
 
 ## Multi-Agent Workflow (Runtime, Not Development)
 
