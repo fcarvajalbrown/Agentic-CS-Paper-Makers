@@ -420,13 +420,14 @@ Agents do not call external APIs directly. The Go orchestrator implements a tool
 5. API produces the final response based on real data
 
 **Tools per agent:**
-- Research Agent: `search_arxiv`, `search_semantic_scholar`
+- Research Agent: `search_arxiv`, `search_semantic_scholar`, `search_zenodo`
 - All other agents: No tools (text-only reasoning)
 
 **Web search sources (priority order):**
 1. arXiv API (free, reliable)
 2. Semantic Scholar API (free, generous)
-3. (Future) SerpAPI for Google Scholar (paid, optional)
+3. Zenodo API (free, good for preprints and datasets)
+4. (Future) SerpAPI for Google Scholar (paid, optional)
 
 No Google Scholar scraping (blocked, fragile).
 
