@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "research_context_v1",
+  "type": "object",
+  "required": ["version", "stage", "seed", "query_keywords", "sources", "synthesis_summary", "tokens_used"],
+  "properties": {
+    "version": { "type": "string" },
+    "stage": { "type": "string", "const": "research" },
+    "seed": { "type": "string", "minLength": 1 },
+    "query_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "query", "papers"],
+        "properties": {
+          "source": { "type": "string", "enum": ["arxiv", "semantic_scholar"] },
+          "query": { "type": "string" },
+          "papers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["title", "authors", "year", "abstract", "url"],
+              "properties": {
+                "title": { "type": "string" },
+                "authors": { "type": "array", "items": { "type": "string" } },
+                "year": { "type": "integer" },
+                "abstract": { "type": "string" },
+                "url": { "type": "string", "format": "uri" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "synthesis_summary": { "type": "string", "minLength": 1 },
+    "tokens_used": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}

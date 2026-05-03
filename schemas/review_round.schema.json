@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "review_round_v1",
+  "type": "object",
+  "required": ["round", "reviews"],
+  "properties": {
+    "round": { "type": "integer", "minimum": 1 },
+    "reviews": {
+      "type": "object",
+      "required": ["formalist", "game_theorist", "skeptic"],
+      "properties": {
+        "formalist":     { "$ref": "#/$defs/review" },
+        "game_theorist": { "$ref": "#/$defs/review" },
+        "skeptic":       { "$ref": "#/$defs/review" }
+      },
+      "additionalProperties": false
+    },
+    "human_responses": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["human_says", "writer_revision_applied"],
+        "properties": {
+          "human_says": { "type": "string" },
+          "writer_revision_applied": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "meta_reviewer_notes": {
+      "type": "object",
+      "properties": {
+        "contradictions": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "review": {
+      "type": "object",
+      "required": ["content", "status"],
+      "properties": {
+        "content": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "addressed", "skipped"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "blueprint_v1",
+  "type": "object",
+  "required": ["version", "stage", "title", "research_context_id", "formal_model", "proof_obligations", "human_approved"],
+  "properties": {
+    "version": { "type": "string" },
+    "stage": { "type": "string", "const": "blueprint" },
+    "title": { "type": "string", "minLength": 1 },
+    "research_context_id": { "type": "string" },
+    "formal_model": {
+      "type": "object",
+      "required": ["game_type", "players", "assumptions", "equilibrium_claims"],
+      "properties": {
+        "game_type": { "type": "string" },
+        "players": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "assumptions": { "type": "array", "items": { "type": "string" } },
+        "equilibrium_claims": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "proof_obligations": { "type": "array", "items": { "type": "string" } },
+    "human_approved": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}

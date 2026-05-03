@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "draft_v1",
+  "type": "object",
+  "required": ["version", "stage", "body_markdown", "citation_placeholders", "tokens_used"],
+  "properties": {
+    "version": { "type": "string" },
+    "stage": { "type": "string", "const": "draft" },
+    "body_markdown": { "type": "string", "minLength": 1 },
+    "citation_placeholders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["placeholder", "title", "url"],
+        "properties": {
+          "placeholder": { "type": "string" },
+          "title": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "tokens_used": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}
