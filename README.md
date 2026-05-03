@@ -9,7 +9,7 @@
 
 ## What It Does
 
-1. **Research** — Takes your seed idea, searches arXiv and Semantic Scholar, and grounds it in real literature.
+1. **Research** — Takes your seed idea, searches arXiv, Semantic Scholar, and Zenodo, and grounds it in real literature.
 2. **Socratic Architect** — Asks clarifying questions to formalize your idea into a rigorous blueprint.
 3. **Lead Writer** — Generates academic Markdown prose from the approved blueprint.
 4. **Simulated Peer Review** — Three specialist critics review the draft in parallel.
@@ -83,4 +83,4 @@ GPL v3 — see `LICENSE`.
 
 ## Status
 
-In development. See [`docs/PRD.md`](docs/PRD.md) for the full specification and [`codingplan.ini`](codingplan.ini) for the build order.
+In development. See [`docs/PRD.md`](docs/PRD.md) for the full specification and [`docs/codingplan.ini`](docs/codingplan.ini) for the build order.

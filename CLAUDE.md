@@ -24,9 +24,9 @@ This is a Go-only CLI tool for orchestrating multi-agent academic paper writing 
 - Web search tools live in `internal/tools/` — arXiv, Semantic Scholar, and Zenodo HTTP clients. No scraping.
 - The tool-use loop (LLM returns function call → Go executes → result fed back) lives in `internal/llm/client.go`.
 
-### Agent Profiles (`agents/`)
+### Agent Profiles (`pkg/embed/agents/`)
 - Each agent has a `.md` profile file defining its role and system prompt.
-- These are embedded into the Go binary via `//go:embed`.
+- These are embedded into the Go binary via `//go:embed` in `pkg/embed/embed.go`.
 - **Never edit agent profiles without explicit user sign-off on each.** The user wants to define them one-by-one with their check.
 
 ## AI Skills (`.skills/`)

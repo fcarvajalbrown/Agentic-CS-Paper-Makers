@@ -12,6 +12,7 @@ Agentic CS Paper Makers is a CLI-first academic paper generation workflow target
 
 ### Dependencies
 - `github.com/spf13/cobra v1.9.0` — CLI commands
+- `github.com/santhosh-tekuri/jsonschema/v6 v6.0.2` — JSON Schema 2020-12 validation
 
 ### Output
 - Canonical: **Markdown** (`paper.md`) with YAML frontmatter, LaTeX math blocks
