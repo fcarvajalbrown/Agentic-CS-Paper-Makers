@@ -82,6 +82,8 @@ Examples:
   chore(deps): add cobra dependency
 ```
 
+**Never add Co-Authored-By or any Claude/Anthropic attribution to commit messages.** No exceptions.
+
 ### Go
 - Use `cobra` for subcommands. One command per file under `internal/cli/`.
 - Return errors, do not panic. Every function that can fail returns `(T, error)`.
@@ -120,7 +122,7 @@ When writing or modifying a file in any directory, read the **oldest existing fi
 ## Workflow When Working on This Project
 
 1. **Read the PRD** before implementing any feature. The PRD is the source of truth.
-2. **Check `codingplan.ini`** for the current phase and build order.
+2. **Check `docs/codingplan.ini`** for the current phase and build order.
 3. **Read existing code** before modifying. Use exploration agents if you need to scan >3 files.
 4. **Propose, then execute.** Say what file you are about to create/modify, wait for confirmation.
 5. **Test after writing.** Run `go test ./...` and report results.

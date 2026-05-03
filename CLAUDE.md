@@ -56,6 +56,8 @@ Examples:
   chore(deps): add cobra dependency
 ```
 
+**Never add Co-Authored-By or any Claude/Anthropic attribution to commit messages.** No exceptions.
+
 ### Style: Use the Oldest File in the Directory as a Guide
 When writing or modifying a file in any directory, read the **oldest existing file** in that directory first and use it as a style reference: package name, import grouping, error handling pattern, naming style, receiver names. Prefer consistency with what's already there, but use judgment — it's a suggestion, not a hard constraint.
 
@@ -76,7 +78,7 @@ The CLI is strictly sequential where order matters, parallel only for the 3 Crit
 
 ## Build Order
 
-See `codingplan.ini` for the phased build order. Never start a phase until all phases above it are done.
+See `docs/codingplan.ini` for the phased build order. Never start a phase until all phases above it are done.
 
 ## Configuration Hierarchy
 
