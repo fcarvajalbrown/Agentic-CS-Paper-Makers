@@ -42,13 +42,13 @@ Agentic CS Paper Makers is a CLI-first academic paper generation workflow target
 │   ├── tools/              # arXiv and Semantic Scholar HTTP clients
 │   ├── inbox/              # Interactive reviewer response loop logic
 │   └── export/             # Finalize and export logic
-├── pkg/embed/              # go:embed directives for agent profiles + schemas
-├── agents/                 # Agent profile .md files (embedded into binary)
-├── schemas/                # JSON Schema files (embedded into binary)
+├── pkg/embed/              # go:embed directives + embedded agent profiles + schemas
+│   ├── agents/             # Agent profile .md files (embedded into binary)
+│   └── schemas/            # JSON Schema files (embedded into binary)
 ├── .skills/                # Model-agnostic system prompts (coder, reviewer, architect)
 ├── .vscode/                # VSCode workspace settings and extension recommendations
 ├── docs/PRD.md             # Full product spec
-├── codingplan.ini          # Phased build order
+├── docs/codingplan.ini     # Phased build order
 ├── go.mod, go.sum
 ├── Makefile
 ├── README.md               # User-facing docs
