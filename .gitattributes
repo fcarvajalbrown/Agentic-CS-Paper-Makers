@@ -1,0 +1,21 @@
+# Force LF for all source and text files
+* text=auto eol=lf
+
+# Go source
+*.go text eol=lf
+*.mod text eol=lf
+*.sum text eol=lf
+
+# Config and docs
+*.md text eol=lf
+*.json text eol=lf
+*.ini text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+Makefile text eol=lf
+
+# Treat compiled binaries as binary
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary

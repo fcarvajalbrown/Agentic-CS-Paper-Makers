@@ -1,0 +1,15 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "golang.go",
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
+  "go.formatTool": "gofmt",
+  "go.lintTool": "golangci-lint",
+  "go.lintOnSave": "package",
+  "go.testOnSave": false,
+  "go.useLanguageServer": true,
+  "gopls": {
+    "ui.semanticTokens": true
+  }
+}
